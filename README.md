@@ -14,7 +14,7 @@ https;//kfach.netlify.com - a minimal color picker that does not use Adobe Flash
 ## Screenshots
 
 ![Flat UI colors](scr1.png "Flat UI colors")
-![Material UI colors](src2.png "Material colors")
+![Material UI colors](scr2.png "Material colors")
 
 ## Why another one color picker?
 
