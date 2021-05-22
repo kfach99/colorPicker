@@ -1,0 +1,140 @@
+doctype html
+html(lang="en")
+	head
+		meta(charset="utf-8")
+		title FACH-COLORS | FOR UI DESIGN 
+		meta(name="viewport", content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0")
+		meta(name="keywords", content="color palette,color picker,colors,flat,flatui,flat ui,material design,lollipop design,ios8 colors,wp8 colors,wp7 colors,ios7 colors,tango palette,solarized dark colors,solarized light colors")
+
+		meta(name="description", content="Quickly pick and copy colors from the best-known palettes: material design, flat ui, ios, windows phone, solarized and tango")
+
+		meta(name="twitter:card", content="summary")
+		meta(name="twitter:site", content="@k_fach")
+		meta(name="twitter:title", content="Color picker for the most popular color guidelines")
+		meta(name="twitter:description", content="Pick and copy colors from material design, flat ui, ios8, wp8, solarized and tango guidelines.")
+		meta(name="twitter:creator", content="@k_fach")
+
+
+		link(href='styles.css', rel='stylesheet', type='text/css')
+		link(href='//fonts.googleapis.com/css?family=Alegreya+Sans+SC:100,300', rel='stylesheet', type='text/css')
+
+		noscript
+			style
+				| .format { display: none; }
+				| .palettes .palette .color .rgb { visibility: visible; opacity: 1;}
+				| body { overflow-y: auto; }
+		script.
+
+			var formats = {
+				'hashhex': function(c) { return '#' + c; },
+				'oxhex': function(c) { return '0x' + c; },
+				'rgba': function(c) {
+					var r = parseInt(c.substr(0,2), 16);
+					var g = parseInt(c.substr(2,2),16);
+					var b = parseInt(c.substr(4,2),16);
+					return 'rgb(' + r + ',' + g + ',' + b + ')';
+				}
+			};
+			
+			window.onload = function() {
+				// Detect if touch screen is supported
+				// Color value is toggled on hover when mouse is present, and is always
+				// shown when touch screen is present
+				document.documentElement.className += 
+					(("ontouchstart" in document.documentElement) ?
+						' touch' : ' notouch');
+				// Bind click events for format toggle buttons
+				[].forEach.call(document.querySelectorAll('.format a'), function(el) {
+					el.addEventListener('click', function(e) {
+						e.preventDefault();
+						[].forEach.call(document.querySelectorAll('.format a'), function(a) {
+							a.className = '';
+						});
+						el.className = 'active';
+						[].forEach.call(document.querySelectorAll('.color'), function(tile) {
+							var rgb = tile.querySelector('.rgb');
+							var f = formats[el.dataset.format];
+							rgb.textContent = f(tile.dataset.color);
+						});
+					});
+				});
+				// Bind click events to each color tile
+				var tiles = document.querySelectorAll('.color');
+				for (var i = 0; i < tiles.length; i++) {
+					(function(tile) {
+						tile.addEventListener('click', function() {
+							var el = this.querySelector('.rgb');
+							// Try to select color value, so one has only to press Ctrl+C
+							if (window.getSelection) {
+								var range = document.createRange();
+								range.selectNode(el);
+								window.getSelection().removeAllRanges();
+								window.getSelection().addRange(range);
+								// Try to copy color value using HTML5 API
+								try {
+									if (document.execCommand('copy')) {
+										window.getSelection().removeAllRanges();
+										// If succeeded - show some animation
+										el.parentNode.classList.add('clicked');
+										setTimeout(function() {
+											el.parentNode.classList.remove('clicked');
+										}, 100);
+									}
+								} catch(e) {}
+							}
+						});
+					})(tiles[i]);
+				}
+			};
+	body
+		header.flex#top
+			h1.flex.center Palette
+			nav.flex.center.col
+				ul.flex.menu
+					each palette in palettes
+						li.flex
+							a.active(href='##{palette.name}') #{palette.name}
+				ul.flex.center.format
+					li.flex
+						a.active(data-format='hashhex') #hex
+					li.flex
+						a(data-format='oxhex') hex
+					li.flex
+						a(data-format='rgba') rgb
+			nav.about.flex.center.col
+				p.flex
+					a.active(href="https://kfach.netlify.com") made by <strong>k_fach</strong>
+				p.flex
+					a.active(style="color: #ff5722", href="http://www.facebook.com/kamal.fach")
+						| +trikita
+					| &nbsp;
+					a.active(style="color: #5677fc", href="http://twitter.com/k_fach")
+						| @trikita
+				p.flex
+					a.active(href="https://github.com/kfach99") github
+		section.palettes
+			each palette in palettes
+				<!-- Colors from the #{palette.name} guidelines -->
+				h1(id='#{palette.name}')
+					a(href='#top') #{palette.name}
+				section.palette
+					each color, name in palette.colors
+						- var w = 100/palette.width;
+						- var bg = '#' + color;
+						- var r = parseInt(color.substr(0,2), 16);
+						- var g = parseInt(color.substr(2,2),16);
+						- var b = parseInt(color.substr(4,2),16);
+						- var yiq = ((r*299)+(g*587)+(b*114))/1000;
+						- var fgclass = yiq >= 180 ? 'black-text' : 'white-text';
+						.color(class='#{fgclass}', style='background: #{bg}; width: #{w}%', data-color='#{color}')
+							.name #{name}
+							.rgb #{bg}
+		if service.analytics
+			script.
+				(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+				(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+				m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+				})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+				ga('create', '#{ service.analytics }', 'auto');
+				ga('send', 'pageview');
+
