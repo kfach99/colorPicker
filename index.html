@@ -11,6 +11,17 @@ body { overflow-y: auto; }</style></noscript><script>var formats = {
 	}
 };
 
+	var audio = new Audio("https://www.soundjay.com/buttons/button-35.wav") ;
+
+		audio.oncanplaythrough = function(){
+		audio.play();
+		}
+
+		audio.loop = false;
+
+		audio.onended = function(){
+		audio.play();
+		}
 window.onload = function() {
 	// Detect if touch screen is supported
 	// Color value is toggled on hover when mouse is present, and is always
@@ -53,8 +64,11 @@ window.onload = function() {
 							el.parentNode.classList.add('clicked');
 							setTimeout(function() {
 								el.parentNode.classList.remove('clicked');
-									//displaying a message
-									alert("color copied to the clipboard");
+									//sound effect
+									audio.play();
+										//displaying a message
+										alert("color copied to the clipboard");
+										
 							}, 100);
 						}
 					} catch(e) {}
