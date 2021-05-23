@@ -54,10 +54,11 @@ window.onload = function() {
 							window.getSelection().removeAllRanges();
 							// If succeeded - show some animation
 							el.parentNode.classList.add('clicked');
-							setTimeout(function() {
-								el.parentNode.classList.remove('clicked');
 									//sound effect
 									play();
+							setTimeout(function() {
+								el.parentNode.classList.remove('clicked');
+									
 										//displaying a message
 										alert("color copied to the clipboard");
 										
