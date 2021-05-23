@@ -10,18 +10,10 @@ body { overflow-y: auto; }</style></noscript><script>var formats = {
 		return 'rgb(' + r + ',' + g + ',' + b + ')';
 	}
 };
-
-	var audio = new Audio("https://www.soundjay.com/buttons/button-35.wav") ;
-
-		audio.oncanplaythrough = function(){
-		audio.play();
-		}
-
-		audio.loop = false;
-
-		audio.onended = function(){
-		audio.play();
-		}
+		function play() {
+			var audio = new Audio("https://www.soundjay.com/buttons/button-35.wav") ;
+			audio.play();
+	         }
 window.onload = function() {
 	// Detect if touch screen is supported
 	// Color value is toggled on hover when mouse is present, and is always
@@ -65,7 +57,7 @@ window.onload = function() {
 							setTimeout(function() {
 								el.parentNode.classList.remove('clicked');
 									//sound effect
-									audio.play();
+									play();
 										//displaying a message
 										alert("color copied to the clipboard");
 										
